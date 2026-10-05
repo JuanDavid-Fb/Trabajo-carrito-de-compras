@@ -58,7 +58,7 @@ export default function CartItem({ linea, onSetQuantity, onAskRemove, onRemove, 
       </div>
 
       <div className="cart-item__side">
-        <span className="cart-item__subtotal" aria-label={`Subtotal de ${producto.nombre}`}>
+        <span key={subtotal} className="cart-item__subtotal bump" aria-label={`Subtotal de ${producto.nombre}`}>
           {formatCOP(subtotal)}
         </span>
         <button

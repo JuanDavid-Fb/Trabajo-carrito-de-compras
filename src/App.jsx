@@ -52,17 +52,25 @@ export default function App() {
 
       <main id="catalogo" className="catalog" tabIndex={-1}>
         <section className="hero">
-          <p className="hero__eyebrow">Sabores de Palmira y del Valle</p>
-          <p className="hero__lead">
-            Elige tus productos, revisa el stock disponible y arma tu pedido sin sorpresas.
-          </p>
+          <div className="hero__copy">
+            <p className="hero__eyebrow">Sabores de Palmira y del Valle</p>
+            <p className="hero__lead">
+              Elige tus productos, revisa el stock disponible y arma tu pedido sin sorpresas.
+            </p>
+          </div>
+          <div className="hero__art" aria-hidden="true">
+            <span className="hero__disc hero__disc--1">☕</span>
+            <span className="hero__disc hero__disc--2">🍫</span>
+            <span className="hero__disc hero__disc--3">🍯</span>
+          </div>
         </section>
 
         <h2 className="catalog__title">Productos típicos de la región</h2>
         <div className="catalog__grid">
-          {PRODUCTOS.map((producto) => (
+          {PRODUCTOS.map((producto, index) => (
             <ProductCard
               key={producto.id}
+              index={index}
               producto={producto}
               enCarrito={cart.cantidadDe(producto.id)}
               onAdd={agregar}
@@ -74,7 +82,9 @@ export default function App() {
       </main>
 
       <footer className="footer">
-        TIENDA PALMIRA · Reto práctico React · SENA – CBI Palmira
+        <strong>TIENDA PALMIRA</strong>
+        <span>Reto práctico React</span>
+        <span>SENA – CBI Palmira</span>
       </footer>
 
       <Cart

@@ -25,7 +25,7 @@ npm run dev        # abre la URL que muestra la consola (http://localhost:5173)
 Otros comandos:
 
 ```bash
-npm test           # 35 pruebas: 12 casos del instructor + validaciones + mejoras (Vitest)
+npm test           # 38 pruebas: 12 casos del instructor + validaciones + mejoras (Vitest)
 npm run build      # build de producción
 ```
 
@@ -42,8 +42,8 @@ npm run build      # build de producción
 ### Valor agregado (no altera los requisitos del reto)
 
 - **Persistencia** del carrito en `localStorage` (validada contra el catálogo y el stock; un dato dañado no rompe la app).
-- **Diseño** renovado: banner, tarjetas con ilustración, aviso "Últimas unidades" / "Agotado", panel de carrito con totales fijos abajo y animaciones sutiles (se desactivan con `prefers-reduced-motion`).
-- **Responsive** pensado para celular: panel a pantalla completa, botones de 44 px y campos de 16 px (sin zoom en iOS).
+- **Diseño** de tienda e-commerce: banner, tarjetas con etiqueta de precio, barra de stock, avisos "Últimas unidades" / "Agotado", panel de carrito con totales fijos y animaciones sutiles (entrada del catálogo, apertura y cierre del carrito, cambios de cantidad, toasts). Todo se desactiva con `prefers-reduced-motion`.
+- **Responsive** pensado para celular: catálogo en 2 columnas, carrito como hoja inferior, botones de 44 px y campos de 16 px (sin zoom en iOS).
 - **Toasts** con ícono, barra de progreso y pausa al pasar el mouse o enfocar (el de confirmación dura más tiempo).
 - **Vaciar carrito** (con confirmación por toast) y **Seguir comprando**.
 - **Accesibilidad**: enlace "Saltar al catálogo", landmarks, foco visible, el scroll de fondo se bloquea con el carrito abierto y el botón del carrito anuncia las unidades.

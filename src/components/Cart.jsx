@@ -1,7 +1,10 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import CartItem from "./CartItem";
 import { CloseIcon } from "./Icons";
 import { formatCOP } from "../utils/format";
+
+// Debe coincidir con la duración de las animaciones de salida en styles.css.
+const CIERRE_MS = 200;
 
 /** Panel lateral del carrito: se abre desde el navbar y se cierra con ✕, overlay o Escape. */
 export default function Cart({
@@ -17,6 +20,21 @@ export default function Cart({
   onAskClear,
 }) {
   const closeRef = useRef(null);
+  const estabaAbierto = useRef(open);
+  // Solo visual: mantiene el panel montado unos ms para animar la salida (oculto a lectores de pantalla).
+  const [saliendo, setSaliendo] = useState(false);
+
+  useEffect(() => {
+    let t;
+    if (estabaAbierto.current && !open) {
+      setSaliendo(true);
+      t = setTimeout(() => setSaliendo(false), CIERRE_MS);
+    } else if (open) {
+      setSaliendo(false);
+    }
+    estabaAbierto.current = open;
+    return () => clearTimeout(t);
+  }, [open]);
 
   useEffect(() => {
     if (!open) return undefined;
@@ -34,12 +52,20 @@ export default function Cart({
     };
   }, [open, onClose]);
 
-  if (!open) return null;
+  if (!open && !saliendo) return null;
+
+  const estadoSalida = open ? "" : " is-closing";
+  const ocultoAyudas = open ? undefined : true;
 
   return (
     <>
-      <div className="overlay" onClick={onClose} data-testid="cart-overlay" />
-      <aside className="cart" role="dialog" aria-label="Carrito de compras">
+      <div
+        className={`overlay${estadoSalida}`}
+        onClick={onClose}
+        data-testid="cart-overlay"
+        aria-hidden={ocultoAyudas}
+      />
+      <aside className={`cart${estadoSalida}`} role="dialog" aria-label="Carrito de compras" aria-hidden={ocultoAyudas}>
         <div className="cart__header">
           <h2>Tu carrito</h2>
           <button
@@ -82,11 +108,15 @@ export default function Cart({
           <dl className="cart__totals">
             <div>
               <dt>Total de unidades</dt>
-              <dd data-testid="total-units">{totalUnits}</dd>
+              <dd key={totalUnits} className="bump" data-testid="total-units">
+                {totalUnits}
+              </dd>
             </div>
             <div className="cart__total">
               <dt>Total de la compra</dt>
-              <dd data-testid="total-price">{formatCOP(totalPrice)}</dd>
+              <dd key={totalPrice} className="bump" data-testid="total-price">
+                {formatCOP(totalPrice)}
+              </dd>
             </div>
           </dl>
           <div className="cart__actions">

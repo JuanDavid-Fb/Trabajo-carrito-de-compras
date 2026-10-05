@@ -4,11 +4,12 @@ import { formatCOP } from "../utils/format";
 import { UMBRAL_POCAS_UNIDADES, visualDe } from "../utils/productVisuals";
 
 /** Tarjeta del catálogo: nombre, precio, stock, cantidad (inicia en 1) y botón Agregar. */
-export default function ProductCard({ producto, enCarrito, onAdd, onMaxStock, onMinQuantity }) {
+export default function ProductCard({ producto, enCarrito, onAdd, onMaxStock, onMinQuantity, index = 0 }) {
   const [cantidad, setCantidad] = useState(1);
   const disponible = producto.stock - enCarrito;
   const sinDisponible = disponible <= 0;
   const pocasUnidades = !sinDisponible && disponible <= UMBRAL_POCAS_UNIDADES;
+  const porcentajeDisponible = Math.max(0, Math.min(100, (disponible / producto.stock) * 100));
   const titleId = `producto-${producto.id}-titulo`;
   const visual = visualDe(producto.id);
 
@@ -27,8 +28,12 @@ export default function ProductCard({ producto, enCarrito, onAdd, onMaxStock, on
   };
 
   return (
-    <article className={`card${sinDisponible ? " card--soldout" : ""}`} aria-labelledby={titleId}>
-      <div className="card__media" style={{ background: visual.tono }}>
+    <article
+      className={`card${sinDisponible ? " card--soldout" : ""}`}
+      style={{ "--i": index, "--tono": visual.tono }}
+      aria-labelledby={titleId}
+    >
+      <div className="card__media">
         <span className="card__emoji" aria-hidden="true">
           {visual.emoji}
         </span>
@@ -37,14 +42,17 @@ export default function ProductCard({ producto, enCarrito, onAdd, onMaxStock, on
       </div>
 
       <div className="card__body">
+        <p className="card__price">{formatCOP(producto.precio)}</p>
         <h2 className="card__title" id={titleId}>
           {producto.nombre}
         </h2>
-        <p className="card__price">{formatCOP(producto.precio)}</p>
         <p className="card__stock">
           Stock disponible: <strong>{producto.stock}</strong>
-          {enCarrito > 0 && <span className="card__incart"> · {enCarrito} en el carrito</span>}
         </p>
+        <span className="card__meter" aria-hidden="true">
+          <span style={{ width: `${porcentajeDisponible}%` }} />
+        </span>
+        {enCarrito > 0 && <span className="pill">{enCarrito} en el carrito</span>}
       </div>
 
       <div className="card__actions">

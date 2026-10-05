@@ -117,6 +117,34 @@ describe("Mejoras (no afectan los requisitos del reto)", () => {
     expect(screen.queryByRole("button", { name: "Sí, eliminar" })).not.toBeInTheDocument();
   });
 
+  it("la salida animada del carrito queda oculta a lectores de pantalla y se desmonta sola", () => {
+    vi.useFakeTimers();
+    abrirCarrito();
+    fireEvent.click(screen.getByRole("button", { name: /cerrar carrito/i }));
+    // Durante la animación el panel sigue en el DOM pero no es accesible ni interactivo.
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(screen.getByTestId("cart-overlay")).toHaveAttribute("aria-hidden", "true");
+    act(() => {
+      vi.advanceTimersByTime(300);
+    });
+    expect(screen.queryByTestId("cart-overlay")).not.toBeInTheDocument();
+  });
+
+  it("reabrir el carrito durante la animación de salida muestra un solo panel", () => {
+    abrirCarrito();
+    fireEvent.keyDown(document, { key: "Escape" });
+    abrirCarrito();
+    expect(screen.getAllByRole("dialog")).toHaveLength(1);
+    expect(screen.getAllByTestId("cart-overlay")).toHaveLength(1);
+  });
+
+  it("la barra de stock de la tarjeta refleja las unidades disponibles", () => {
+    const medidor = () => tarjeta(CAFE).getByText("Stock disponible:").closest("div").querySelector(".card__meter span");
+    expect(medidor()).toHaveStyle({ width: "100%" });
+    agregar(CAFE, 2);
+    expect(medidor()).toHaveStyle({ width: "75%" });
+  });
+
   it("incluye enlace para saltar al catálogo y landmarks principales", () => {
     expect(screen.getByRole("link", { name: "Saltar al catálogo" })).toHaveAttribute("href", "#catalogo");
     expect(screen.getByRole("main")).toHaveAttribute("id", "catalogo");

@@ -18,9 +18,11 @@ const Navbar = forwardRef(function Navbar({ totalUnits, onOpenCart }, cartButton
         onClick={onOpenCart}
         aria-label={`Abrir carrito, ${totalUnits} ${totalUnits === 1 ? "unidad" : "unidades"}`}
       >
-        <CartIcon />
+        {/* `key` reinicia la microanimación cada vez que cambia el total de unidades. */}
+        <span key={`i${totalUnits}`} className="navbar__icon">
+          <CartIcon />
+        </span>
         {totalUnits > 0 && (
-          // `key` reinicia la animación cada vez que cambia el total.
           <span key={totalUnits} className="navbar__badge" data-testid="cart-count" aria-hidden="true">
             {totalUnits}
           </span>
